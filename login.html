@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TikTok Download</title>
+
+<style>
+
+/* ===== BLOOD RAVEN FONT ===== */
+@font-face{
+  font-family:'BloodRaven';
+  src:url('https://files.catbox.moe/0z2k0t.ttf') format('truetype');
+}
+
+/* ================= BODY ================= */
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  color:white;
+  overflow:hidden;
+}
+
+/* ================= BACKGROUND VIDEO ================= */
+#bgVideo{
+  position:fixed;
+  right:0;
+  bottom:0;
+  min-width:100%;
+  min-height:100%;
+  object-fit:cover;
+  z-index:-2;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  z-index:-1;
+}
+
+/* ================= LOADING ================= */
+#loader{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+#loader video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* ================= MAIN ================= */
+#main{
+  display:none;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+/* ================= BOX ================= */
+.box{
+  background:rgba(30,41,59,0.75);
+  backdrop-filter:blur(12px);
+  padding:40px;
+  border-radius:15px;
+  text-align:center;
+  width:90%;
+  max-width:500px;
+  box-shadow:0 0 25px rgba(0,0,0,.5);
+}
+
+/* ===== TITLE ===== */
+h2{
+  font-family:'BloodRaven';
+  letter-spacing:2px;
+  font-size:28px;
+}
+
+/* ===== INPUT ===== */
+input{
+  width:100%;
+  padding:14px;
+  border-radius:8px;
+  border:none;
+  margin-top:15px;
+  font-size:16px;
+  font-family:'BloodRaven';
+}
+
+/* ===== BUTTON ===== */
+button{
+  margin-top:15px;
+  padding:14px;
+  width:100%;
+  border:none;
+  border:1px solid #ff1a1a;
+  background:#111;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* ===== STATUS ===== */
+#status{
+  margin-top:15px;
+  color:#cbd5e1;
+}
+
+/* ===== DEV CREDIT ===== */
+.dev-credit{
+  position:fixed;
+  top:15px;
+  right:20px;
+  font-family:'BloodRaven';
+  font-size:20px;
+  color:#ff1a1a;
+  letter-spacing:2px;
+  z-index:9998;
+  text-shadow:
+    0 0 5px rgba(255,0,0,0.7),
+    0 0 15px rgba(255,0,0,0.5);
+  pointer-events:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- DEV CREDIT -->
+<div class="dev-credit">DEV BY AGISS</div>
+
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="https://files.catbox.moe/ow97ks.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
+<!-- LOADING -->
+<div id="loader">
+  <video id="introVideo" autoplay muted playsinline>
+    <source src="https://files.catbox.moe/dggveb.mp4" type="video/mp4">
+  </video>
+</div>
+
+<!-- WEBSITE -->
+<div id="main">
+  <div class="box">
+
+    <h2>TikTok Download</h2>
+
+    <input id="url" placeholder="Paste link tiktok">
+    <button onclick="download()">Download</button>
+
+    <p id="status"></p>
+
+  </div>
+</div>
+
+<script>
+
+/* ===== LOADING CONTROL ===== */
+const video=document.getElementById("introVideo");
+const loader=document.getElementById("loader");
+const main=document.getElementById("main");
+
+video.onended=()=>{
+  loader.style.display="none";
+  main.style.display="flex";
+  document.body.style.overflow="auto";
+};
+
+setTimeout(()=>{
+  loader.style.display="none";
+  main.style.display="flex";
+  document.body.style.overflow="auto";
+},10000);
+
+/* ===== DOWNLOAD SYSTEM ===== */
+async function download(){
+
+  const url=document.getElementById("url").value.trim();
+  const status=document.getElementById("status");
+
+  if(!url){
+    status.innerText="Masukkan link dulu.";
+    return;
+  }
+
+  status.innerText="Memproses...";
+
+  try{
+
+    const res=await fetch(
+      "https://tikwm.com/api/?url="+encodeURIComponent(url)
+    );
+
+    const data=await res.json();
+
+    if(data.data && data.data.play){
+      window.open(data.data.play,"_blank");
+      status.innerText="Download berhasil!";
+      return;
+    }
+
+    status.innerText="Link tidak valid.";
+
+  }catch(e){
+    status.innerText="Server sibuk.";
+  }
+}
+
+</script>
+
+</body>
+</html>
